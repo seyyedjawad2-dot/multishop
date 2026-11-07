@@ -1,8 +1,9 @@
+from multiprocessing.connection import address_type
 
 from django.views import View
 from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login,logout
-from .forms import LoginForm, RegisterForm, OTPForm
+from .forms import LoginForm, RegisterForm, OTPForm, AddressForm
 from .models import User
 from django.core.mail import send_mail
 from django.conf import settings
@@ -22,6 +23,9 @@ class UserLogin(View):
             user = authenticate(username=cd['email'], password=cd['password'])
             if user is not None:
                 login(request, user)
+                next_page=request.GET.get('next')
+                if next_page:
+                    return redirect(next_page)
                 return redirect("/")
             else:
                 form.add_error("email", "invalid user data")
@@ -97,3 +101,21 @@ class VerifyView(View):
 def user_logout(request):
     logout(request)
     return redirect("/")
+
+
+class AddressView(View):
+    def post(self, request):
+        form =AddressForm(request.POST)
+        if form.is_valid():
+            address = form.save(commit=False)
+            address.user=request.user
+            address.save()
+            next_page=request.GET.get('next')
+            if next_page:
+                return redirect(next_page)
+
+        return render(request, 'account/add_address.html', {'form': form})
+
+    def get(self, request):
+        form = AddressForm()
+        return render(request, "account/add_address.html", {"form": form})

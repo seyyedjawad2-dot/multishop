@@ -63,3 +63,20 @@ class EmailOTP(models.Model):
 
     def is_expired(self):
         return timezone.now() > self.created_at + timedelta(minutes=2)
+
+
+class Address(models.Model):
+    user = models.ForeignKey(User,on_delete=models.CASCADE,related_name='addresses')
+    fullname=models.CharField(max_length=30)
+    address = models.CharField(max_length= 300)
+    email =models.EmailField(null=True,blank=True)
+    phone = models.CharField(max_length=12)
+    postal_code = models.CharField(max_length=11)
+
+
+    class Meta:
+        verbose_name='آدرس'
+        verbose_name_plural='آدرس ها'
+
+    def __str__(self):
+      return  self.user.email
