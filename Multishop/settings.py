@@ -13,6 +13,8 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 import os
 
+from django.conf.global_settings import LOGIN_URL
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -41,7 +43,9 @@ INSTALLED_APPS = [
     "Home.apps.HomeConfig",
     "account.apps.AccountConfig",
     "product.apps.ProductConfig",
-    'cart.apps.CartConfig'
+    'cart.apps.CartConfig',
+    'widget_tweaks',
+    'django_render_partial'
 ]
 
 MIDDLEWARE = [
@@ -114,6 +118,8 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 
 USE_TZ = True
+
+LOGIN_URL='/account/login'
 
 
 # Static files (CSS, JavaScript, Images)
